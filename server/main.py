@@ -1,6 +1,12 @@
+import sys
+import pathlib
+
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+
+sys.path.append(str(pathlib.Path(__file__).parent))
+from routers import goal
 
 origins = []
 
@@ -19,6 +25,12 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+app.include_router(
+    goal.router,
+    prefix="/goal",
+    tags=["Goal"],
 )
 
 

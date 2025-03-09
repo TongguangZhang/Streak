@@ -8,4 +8,4 @@ from fastapi import Depends
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 from database import supabase_client
 
-SupabaseDep = Annotated[AClient, Depends(supabase_client.SuperbaseClient.get_instance())]
+SupabaseDep = Annotated[AClient, Depends(supabase_client.SuperbaseClient.get_instance)]
