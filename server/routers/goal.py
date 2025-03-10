@@ -67,7 +67,7 @@ async def delete_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_
 
 
 @router.patch("/{goal_id}/activate")
-async def activate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> tuple[bool, goal_models.GoalInDB]:
+async def activate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
     try:
         res = await goal_handler.activate_goal(goal_id, supabase)
         return res
@@ -77,7 +77,7 @@ async def activate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> tup
 
 
 @router.patch("/{goal_id}/deactivate")
-async def deactivate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> tuple[bool, goal_models.GoalInDB]:
+async def deactivate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
     try:
         res = await goal_handler.deactivate_goal(goal_id, supabase)
         return res

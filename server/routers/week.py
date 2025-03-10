@@ -74,3 +74,13 @@ async def create_new_week(supabase: supabase_dep.SupabaseDep) -> week_models.Wee
     except Exception as e:
         root_logger.error(e)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("{week_id}/check_week_complete/")
+async def check_week_complete(week_id: str, supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
+    try:
+        res = await week_handler.check_week_complete(week_id, supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
