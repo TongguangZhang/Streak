@@ -1,5 +1,6 @@
 import sys
 import pathlib
+import datetime
 
 from fastapi.encoders import jsonable_encoder
 from supabase import AClient, PostgrestAPIResponse
@@ -38,4 +39,25 @@ async def update_goal(goal_id: str, goal_update: goal_models.OptionalGoal, supab
 async def delete_goal(goal_id: str, supabase: AClient) -> goal_models.GoalInDB:
     res: PostgrestAPIResponse = await supabase.table("goal").delete().eq("id", goal_id).execute()
     goal = goal_models.GoalInDB(**res.data[0])
+    return goal
+
+
+# ==========================================
+# Business logic for goal
+# ==========================================
+
+
+async def activate_goal(goal_id: str, supabase: AClient) -> goal_models.GoalInDB:
+    goal = await get_goal(goal_id, supabase)
+    goal.active = True
+    goal.history.append(goal_models.GoalHistory(start=datetime.datetime.now()))
+    goal = await update_goal(goal_id, goal, supabase)
+    return goal
+
+
+async def deactivate_goal(goal_id: str, supabase: AClient) -> goal_models.GoalInDB:
+    goal = await get_goal(goal_id, supabase)
+    goal.active = False
+    goal.history[-1].end = datetime.datetime.now()
+    goal = await update_goal(goal_id, goal, supabase)
     return goal

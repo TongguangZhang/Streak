@@ -1,6 +1,5 @@
 import sys
 import pathlib
-from typing import Annotated
 
 from fastapi import APIRouter, HTTPException
 
@@ -56,6 +55,31 @@ async def update_goal(
 async def delete_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
     try:
         res = await goal_handler.delete_goal(goal_id, supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==========================================
+# Business logic for goal
+# ==========================================
+
+
+@router.patch("/{goal_id}/activate")
+async def activate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
+    try:
+        res = await goal_handler.activate_goal(goal_id, supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.patch("/{goal_id}/deactivate")
+async def deactivate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
+    try:
+        res = await goal_handler.deactivate_goal(goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
