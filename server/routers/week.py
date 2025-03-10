@@ -59,3 +59,18 @@ async def delete_week(week_id: str, supabase: supabase_dep.SupabaseDep) -> week_
     except Exception as e:
         root_logger.error(e)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==========================================
+# Business logic for week
+# ==========================================
+
+
+@router.post("/new_week")
+async def create_new_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
+    try:
+        res = await week_handler.create_new_week(supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
