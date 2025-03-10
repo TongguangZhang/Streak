@@ -63,3 +63,30 @@ async def delete_weekly_goal(
     except Exception as e:
         root_logger.error(e)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==========================================
+# Business logic for weekly goal
+# ==========================================
+
+
+@router.get("/{weekly_goal_id}/can_check")
+async def can_check_weekly_goal(weekly_goal_id: str, supabase: supabase_dep.SupabaseDep) -> bool:
+    try:
+        res = await weekly_goal_handler.can_check_weekly_goal(weekly_goal_id, supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.patch("/{weekly_goal_id}/check")
+async def check_weekly_goal(
+    weekly_goal_id: str, supabase: supabase_dep.SupabaseDep
+) -> weekly_goal_models.WeeklyGoalInDB:
+    try:
+        res = await weekly_goal_handler.check_weekly_goal(weekly_goal_id, supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
