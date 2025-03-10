@@ -90,3 +90,15 @@ async def check_weekly_goal(
     except Exception as e:
         root_logger.error(e)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.patch("/{weekly_goal_id}/uncheck")
+async def uncheck_weekly_goal(
+    weekly_goal_id: str, supabase: supabase_dep.SupabaseDep
+) -> weekly_goal_models.WeeklyGoalInDB:
+    try:
+        res = await weekly_goal_handler.uncheck_weekly_goal(weekly_goal_id, supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))

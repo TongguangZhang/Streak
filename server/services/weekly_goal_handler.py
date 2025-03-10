@@ -7,6 +7,7 @@ from supabase import AClient, PostgrestAPIResponse
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 from models import weekly_goal_models
+from services import goal_handler
 
 # ==========================================
 # CRUD Handlers for weekly_goal
@@ -58,9 +59,27 @@ async def can_check_weekly_goal(weekly_goal_id: str, supabase: AClient) -> bool:
     return True
 
 
-async def check_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_goal_models.WeeklyGoalInDB | None:
+async def check_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_goal_models.WeeklyGoalInDB:
     weekly_goal = await get_weekly_goal(weekly_goal_id, supabase)
+    goal = await goal_handler.get_goal(weekly_goal.goal_id, supabase)
+
     weekly_goal.checks += 1
     weekly_goal.last_check = datetime.datetime.now()
+
+    if weekly_goal.checks >= goal.count:
+        weekly_goal.completed = True
+
+    weekly_goal = await update_weekly_goal(weekly_goal_id, weekly_goal, supabase)
+    return weekly_goal
+
+
+async def uncheck_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_goal_models.WeeklyGoalInDB:
+    weekly_goal = await get_weekly_goal(weekly_goal_id, supabase)
+
+    if weekly_goal.checks == 0:
+        return weekly_goal
+
+    weekly_goal.checks -= 1
+    weekly_goal.completed = False
     weekly_goal = await update_weekly_goal(weekly_goal_id, weekly_goal, supabase)
     return weekly_goal
