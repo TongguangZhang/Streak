@@ -52,6 +52,12 @@ async def delete_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_g
 # ==========================================
 
 
+async def get_weekly_goals(week_id: str, supabase: AClient) -> list[weekly_goal_models.WeeklyGoalInDB]:
+    res: PostgrestAPIResponse = await supabase.table("weekly_goal").select("*").eq("week_id", week_id).execute()
+    weekly_goals = [weekly_goal_models.WeeklyGoalInDB(**data) for data in res.data]
+    return weekly_goals
+
+
 async def can_check_weekly_goal(weekly_goal_id: str, supabase: AClient) -> bool:
     weekly_goal = await get_weekly_goal(weekly_goal_id, supabase)
     if weekly_goal.last_check < datetime.datetime.now().replace(hour=5, minute=0, second=0, microsecond=0):
@@ -66,9 +72,6 @@ async def check_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_go
     weekly_goal.checks += 1
     weekly_goal.last_check = datetime.datetime.now()
 
-    if weekly_goal.checks >= goal.count:
-        weekly_goal.completed = True
-
     weekly_goal = await update_weekly_goal(weekly_goal_id, weekly_goal, supabase)
     return weekly_goal
 
@@ -80,6 +83,5 @@ async def uncheck_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_
         return weekly_goal
 
     weekly_goal.checks -= 1
-    weekly_goal.completed = False
     weekly_goal = await update_weekly_goal(weekly_goal_id, weekly_goal, supabase)
     return weekly_goal

@@ -70,6 +70,18 @@ async def delete_weekly_goal(
 # ==========================================
 
 
+@router.post("/{week_id}")
+async def get_weekly_goals(
+    week_id: str, supabase: supabase_dep.SupabaseDep
+) -> list[weekly_goal_models.WeeklyGoalInDB]:
+    try:
+        res = await weekly_goal_handler.get_weekly_goals(week_id, supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/{weekly_goal_id}/can_check")
 async def can_check_weekly_goal(weekly_goal_id: str, supabase: supabase_dep.SupabaseDep) -> bool:
     try:

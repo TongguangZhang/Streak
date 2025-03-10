@@ -10,7 +10,6 @@ def get_monday():
 
 
 class Week(BaseModel):
-    completed: bool = Field(default=False)
     start_date: datetime.date = Field(default_factory=lambda: get_monday())
 
 
@@ -20,5 +19,4 @@ class WeekInDB(Week):
 
 
 class OptionalWeek(BaseModel):
-    completed: bool | None = None
     start_date: datetime.date | None = None

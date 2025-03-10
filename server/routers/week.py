@@ -12,6 +12,7 @@ from services import week_handler
 
 router = APIRouter()
 
+
 # ==========================================
 # CRUD for week
 # ==========================================
@@ -66,20 +67,20 @@ async def delete_week(week_id: str, supabase: supabase_dep.SupabaseDep) -> week_
 # ==========================================
 
 
-@router.post("/new_week")
-async def create_new_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
+@router.post("/latest_week")
+async def get_latest_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
     try:
-        res = await week_handler.create_new_week(supabase)
+        res = await week_handler.get_latest_week(supabase)
         return res
     except Exception as e:
         root_logger.error(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("{week_id}/check_week_complete/")
-async def check_week_complete(week_id: str, supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
+@router.post("/new_week")
+async def create_new_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
     try:
-        res = await week_handler.check_week_complete(week_id, supabase)
+        res = await week_handler.create_new_week(supabase)
         return res
     except Exception as e:
         root_logger.error(e)

@@ -46,6 +46,17 @@ async def delete_week(week_id: str, supabase: AClient) -> week_models.WeekInDB:
 # ==========================================
 
 
+async def get_latest_week(supabase: AClient) -> week_models.WeekInDB:
+    res: PostgrestAPIResponse = (
+        await supabase.table("week").select("*").order("start_date", desc=True).limit(1).execute()
+    )
+    if not res.data:
+        raise Exception("No weeks found")
+
+    week = week_models.WeekInDB(**res.data[0])
+    return week
+
+
 async def create_new_week(supabase: AClient) -> week_models.WeekInDB:
     week = week_models.Week()
     week_in_db = await create_week(week, supabase)
@@ -53,21 +64,9 @@ async def create_new_week(supabase: AClient) -> week_models.WeekInDB:
     goals = await supabase.table("goal").select("*").eq("active", True).execute()
 
     weekly_goals = [
-        weekly_goal_models.WeeklyGoal(week_id=week_in_db.id, goal_id=goal_models.GoalInDB(goal).id)
+        weekly_goal_models.WeeklyGoal(goal_id=goal_models.GoalInDB(**goal).id, week_id=week_in_db.id)
         for goal in goals.data
     ]
     res = await supabase.table("weekly_goal").insert(jsonable_encoder(weekly_goals)).execute()
 
     return week_in_db
-
-
-async def check_week_complete(week_id: str, supabase: AClient) -> week_models.WeekInDB:
-    week = await get_week(week_id, supabase)
-    weekly_goals = await supabase.table("weekly_goal").select("*").eq("week_id", week_id).execute()
-    for goal in weekly_goals.data:
-        goal_in_db = weekly_goal_models.WeeklyGoalInDB(**goal)
-        if not goal_in_db.completed:
-            return week
-    week.completed = True
-    week = await update_week(week_id, week, supabase)
-    return week
