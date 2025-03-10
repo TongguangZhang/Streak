@@ -7,13 +7,14 @@ from pydantic import BaseModel, Field
 class GoalHistory(BaseModel):
     start: datetime.datetime = Field(default_factory=datetime.datetime.now)
     end: datetime.datetime | None = Field(default=None)
+    count: int = Field(default=1)
 
 
 class Goal(BaseModel):
     active: bool = Field(default=False)
     name: str = Field(default="New Goal")
     description: str | None = Field(default=None)
-    count: int = Field(default=0)
+    count: int = Field(default=1)
     history: list[GoalHistory] = Field(default_factory=list)
 
 

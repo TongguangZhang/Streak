@@ -50,7 +50,7 @@ async def delete_goal(goal_id: str, supabase: AClient) -> goal_models.GoalInDB:
 async def activate_goal(goal_id: str, supabase: AClient) -> goal_models.GoalInDB:
     goal = await get_goal(goal_id, supabase)
     goal.active = True
-    goal.history.append(goal_models.GoalHistory(start=datetime.datetime.now()))
+    goal.history.append(goal_models.GoalHistory(start=datetime.datetime.now(), count=goal.count))
     goal = await update_goal(goal_id, goal, supabase)
     return goal
 
