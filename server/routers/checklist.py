@@ -1,5 +1,6 @@
 import sys
 import pathlib
+import datetime
 
 from fastapi import APIRouter, HTTPException
 
@@ -14,7 +15,7 @@ from responses import checklist_responses
 router = APIRouter()
 
 # ==========================================
-# Business logic for checklist
+# Business logic for checklisting
 # ==========================================
 
 
@@ -66,6 +67,16 @@ async def uncheck_weekly_goal(
 ) -> weekly_goal_models.WeeklyGoalInDB:
     try:
         res = await checklist_handler.uncheck_weekly_goal(weekly_goal_id, supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/{weekly_goal_id}/last_check")
+async def get_last_check(weekly_goal_id: str, supabase: supabase_dep.SupabaseDep) -> datetime.datetime | None:
+    try:
+        res = await checklist_handler.get_last_check(weekly_goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)

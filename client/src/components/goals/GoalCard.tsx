@@ -12,44 +12,38 @@ const GoalCard = (combinedGoal: GoalCardProps) => {
             .fill(false)
             .map((_, i) => i < combinedGoal.progress)
     })
-    const [check, setCheck] = useState(0)
+
+    const today = new Date().toISOString().split("T")[0]
+    const [checkedToday, setCheckedToday] = useState(false)
 
     useEffect(() => {
-        const updateData = async () => {
+        const fetchData = async () => {
             try {
-                if (check === 1) {
-                    const week = await api.patch(`checklist/${combinedGoal.id}/check`)
-                } else if (check === 2) {
-                    const week = await api.patch(`checklist/${combinedGoal.id}/uncheck`)
-                }
+                const res = await api.get(`checklist/${combinedGoal.id}/last_check`)
+                setCheckedToday(res.data != null ? res.data.split("T")[0] === today : false)
             } catch (error) {
-                console.error("Error fetching goals:", error)
+                console.error("Error fetching last check:", error)
             }
         }
+        fetchData()
+    }, [checked])
 
-        updateData()
-    }, [check])
-
-    const handleProgress = (index: number) => {
+    const handleProgress = async (index: number) => {
         const newChecked = [...checked]
         if (newChecked[index]) {
             if (index === checked.lastIndexOf(true)) {
                 newChecked[index] = false
+                const res = await api.patch(`checklist/${combinedGoal.id}/uncheck`)
             }
-            setCheck(2)
         } else if (index === 0 || newChecked[index - 1]) {
             newChecked[index] = true
-            setCheck(1)
+            const res = await api.patch(`checklist/${combinedGoal.id}/check`)
         }
         setChecked(newChecked)
     }
 
     const latestCheckedIndex = checked.lastIndexOf(true)
     const allChecked = checked.every((val) => val)
-    const today = new Date().toISOString().split("T")[0]
-    const checkedToday = combinedGoal?.check_history[-1]
-        ? combinedGoal.check_history[-1]?.toISOString().split("T")[0] === today
-        : false
 
     return (
         <motion.div

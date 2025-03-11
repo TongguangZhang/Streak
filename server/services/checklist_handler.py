@@ -12,10 +12,7 @@ from services import weekly_goal_crud_handler, week_crud_handler
 
 
 # ==========================================
-# Business logic for goal
-# ==========================================
-# ==========================================
-# Business logic for week
+# Business logic for checklisting
 # ==========================================
 
 
@@ -50,12 +47,12 @@ async def create_new_week(supabase: AClient) -> week_models.WeekInDB:
 
 async def get_weekly_goals(week_id: str, supabase: AClient) -> list[weekly_goal_models.WeeklyGoalInDB]:
     res: PostgrestAPIResponse = await supabase.table("weekly_goal").select("*").eq("week_id", week_id).execute()
-    weekly_goals = [weekly_goal_models.WeeklyGoalInDB(**data) for data in res.data]
-    weekly_goals = {str(goal.goal_id): goal for goal in weekly_goals}
+    weekly_goals = {str(goal["goal_id"]): weekly_goal_models.WeeklyGoalInDB(**goal) for goal in res.data}
     res: PostgrestAPIResponse = await supabase.table("goal").select("*").in_("id", list(weekly_goals.keys())).execute()
     combined_goals = [
         checklist_responses.CombinedGoal(**{**goal, **weekly_goals[goal["id"]].model_dump()}) for goal in res.data
     ]
+    combined_goals.sort(key=lambda x: x.created_at)
     return combined_goals
 
 
@@ -77,3 +74,10 @@ async def uncheck_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_
 
     weekly_goal = await weekly_goal_crud_handler.update_weekly_goal(weekly_goal_id, weekly_goal, supabase)
     return weekly_goal
+
+
+async def get_last_check(weekly_goal_id: str, supabase: AClient) -> datetime.datetime | None:
+    weekly_goal = await weekly_goal_crud_handler.get_weekly_goal(weekly_goal_id, supabase)
+    if weekly_goal.check_history:
+        return weekly_goal.check_history[-1]
+    return None

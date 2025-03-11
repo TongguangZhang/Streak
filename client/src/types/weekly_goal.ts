@@ -2,7 +2,7 @@ export type WeeklyGoal = {
     goal_id: string
     week_id: string
     progress: number
-    check_history: Date[]
+    check_history: string[]
 }
 
 export type WeeklyGoalInDB = WeeklyGoal & {

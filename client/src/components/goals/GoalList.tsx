@@ -10,8 +10,6 @@ const GoalList = () => {
             try {
                 const week = await api.get("checklist/latest_week")
                 const weeklyGoals = await api.get(`checklist/${week.data.id}`)
-
-                console.log(weeklyGoals.data)
                 setGoalAndProgress(weeklyGoals.data)
             } catch (error) {
                 console.error("Error fetching goals:", error)
