@@ -7,6 +7,7 @@ const GoalPage = () => {
     return (
         <div>
             <GoalList />
+            <GoalForm />
         </div>
     )
 }

@@ -63,6 +63,9 @@ async def create_new_week(supabase: AClient) -> week_models.WeekInDB:
 
     goals = await supabase.table("goal").select("*").eq("active", True).execute()
 
+    if not goals.data:
+        return week_in_db
+
     weekly_goals = [
         weekly_goal_models.WeeklyGoal(goal_id=goal_models.GoalInDB(**goal).id, week_id=week_in_db.id)
         for goal in goals.data
