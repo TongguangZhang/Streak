@@ -60,28 +60,3 @@ async def delete_week(week_id: str, supabase: supabase_dep.SupabaseDep) -> week_
     except Exception as e:
         root_logger.error(e)
         raise HTTPException(status_code=500, detail=str(e))
-
-
-# ==========================================
-# Business logic for week
-# ==========================================
-
-
-@router.post("/latest_week")
-async def get_latest_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
-    try:
-        res = await week_crud_handler.get_latest_week(supabase)
-        return res
-    except Exception as e:
-        root_logger.error(e)
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.post("/new_week")
-async def create_new_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
-    try:
-        res = await week_crud_handler.create_new_week(supabase)
-        return res
-    except Exception as e:
-        root_logger.error(e)
-        raise HTTPException(status_code=500, detail=str(e))
