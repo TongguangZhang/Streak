@@ -69,7 +69,7 @@ async def check_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_go
     weekly_goal = await get_weekly_goal(weekly_goal_id, supabase)
     goal = await goal_handler.get_goal(weekly_goal.goal_id, supabase)
 
-    weekly_goal.checks += 1
+    weekly_goal.progress += 1
     weekly_goal.last_check = datetime.datetime.now()
 
     weekly_goal = await update_weekly_goal(weekly_goal_id, weekly_goal, supabase)
@@ -79,9 +79,9 @@ async def check_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_go
 async def uncheck_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_goal_models.WeeklyGoalInDB:
     weekly_goal = await get_weekly_goal(weekly_goal_id, supabase)
 
-    if weekly_goal.checks == 0:
+    if weekly_goal.progress == 0:
         return weekly_goal
 
-    weekly_goal.checks -= 1
+    weekly_goal.progress -= 1
     weekly_goal = await update_weekly_goal(weekly_goal_id, weekly_goal, supabase)
     return weekly_goal
