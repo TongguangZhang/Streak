@@ -33,7 +33,12 @@ const GoalList = () => {
             <ul>
                 {goalAndProgress.map((goal: any) => (
                     <li key={goal.id}>
-                        <GoalCard name={goal.name} count={goal.count} progress={goal.checks} />
+                        <GoalCard
+                            name={goal.name}
+                            count={goal.count}
+                            progress={goal.progress}
+                            last_check={new Date().toISOString().split("T")[0]}
+                        />
                     </li>
                 ))}
             </ul>
