@@ -1,20 +1,34 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { CheckCircle, Trophy } from "lucide-react"
+import { CombinedGoal } from "@/types/checklist_response"
+import api from "@/api"
 
-type GoalCardProps = {
-    name: string
-    count: number
-    progress: number
-    last_check: string // Format: YYYY-MM-DD
-}
+type GoalCardProps = CombinedGoal
 
-const GoalCard = ({ name, count, progress, last_check }: GoalCardProps) => {
+const GoalCard = (combinedGoal: GoalCardProps) => {
     const [checked, setChecked] = useState(() => {
-        return Array(count)
+        return Array(combinedGoal.count)
             .fill(false)
-            .map((_, i) => i < progress)
+            .map((_, i) => i < combinedGoal.progress)
     })
+    const [check, setCheck] = useState(0)
+
+    useEffect(() => {
+        const updateData = async () => {
+            try {
+                if (check === 1) {
+                    const week = await api.patch(`checklist/${combinedGoal.id}/check`)
+                } else if (check === 2) {
+                    const week = await api.patch(`checklist/${combinedGoal.id}/uncheck`)
+                }
+            } catch (error) {
+                console.error("Error fetching goals:", error)
+            }
+        }
+
+        updateData()
+    }, [check])
 
     const handleProgress = (index: number) => {
         const newChecked = [...checked]
@@ -22,8 +36,10 @@ const GoalCard = ({ name, count, progress, last_check }: GoalCardProps) => {
             if (index === checked.lastIndexOf(true)) {
                 newChecked[index] = false
             }
+            setCheck(2)
         } else if (index === 0 || newChecked[index - 1]) {
             newChecked[index] = true
+            setCheck(1)
         }
         setChecked(newChecked)
     }
@@ -31,7 +47,9 @@ const GoalCard = ({ name, count, progress, last_check }: GoalCardProps) => {
     const latestCheckedIndex = checked.lastIndexOf(true)
     const allChecked = checked.every((val) => val)
     const today = new Date().toISOString().split("T")[0]
-    const checkedToday = last_check === today
+    const checkedToday = combinedGoal?.check_history[-1]
+        ? combinedGoal.check_history[-1]?.toISOString().split("T")[0] === today
+        : false
 
     return (
         <motion.div
@@ -40,7 +58,7 @@ const GoalCard = ({ name, count, progress, last_check }: GoalCardProps) => {
             whileHover={{ scale: 1.05 }}
         >
             <div className="flex justify-between items-center mb-3">
-                <h2 className="text-lg font-bold">{name}</h2>
+                <h2 className="text-lg font-bold">{combinedGoal.name}</h2>
                 {allChecked && (
                     <span className="flex items-center gap-1 bg-white text-green-600 text-xs px-3 py-1 rounded-full font-semibold">
                         <Trophy size={14} /> Completed
@@ -49,7 +67,7 @@ const GoalCard = ({ name, count, progress, last_check }: GoalCardProps) => {
             </div>
 
             <div className="flex items-center gap-2 my-3">
-                {Array.from({ length: count }).map((_, index) => {
+                {Array.from({ length: combinedGoal.count }).map((_, index) => {
                     const isChecked = checked[index]
                     const isLatestChecked = index === latestCheckedIndex
                     const nextToCheck = index === latestCheckedIndex + 1

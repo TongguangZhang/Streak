@@ -2,7 +2,7 @@ export type WeeklyGoal = {
     goal_id: string
     week_id: string
     progress: number
-    last_check: Date
+    check_history: Date[]
 }
 
 export type WeeklyGoalInDB = WeeklyGoal & {
@@ -11,3 +11,4 @@ export type WeeklyGoalInDB = WeeklyGoal & {
 }
 
 export type OptionalWeeklyGoal = Partial<WeeklyGoal>
+

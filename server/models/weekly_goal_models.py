@@ -8,7 +8,7 @@ class WeeklyGoal(BaseModel):
     goal_id: uuid.UUID = Field()
     week_id: uuid.UUID = Field()
     progress: int = Field(default=0)
-    last_check: datetime.datetime | None = Field(default=None)
+    check_history: list[datetime.datetime] = Field(default=[])
 
 
 class WeeklyGoalInDB(WeeklyGoal):
@@ -20,4 +20,4 @@ class OptionalWeeklyGoal(BaseModel):
     goal_id: uuid.UUID | None = None
     week_id: uuid.UUID | None = None
     progress: int | None = None
-    last_check: datetime.datetime | None = None
+    check_history: list[datetime.datetime] | None = None
