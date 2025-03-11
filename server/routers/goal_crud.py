@@ -7,7 +7,7 @@ sys.path.append(str(pathlib.Path(__file__).parent.parent))
 from config import root_logger
 from dependencies import supabase_dep
 from models import goal_models
-from services import goal_handler
+from services import goal_crud_handler
 
 
 router = APIRouter()
@@ -20,7 +20,7 @@ router = APIRouter()
 @router.post("/")
 async def create_goal(goal: goal_models.Goal, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
     try:
-        res = await goal_handler.create_goal(goal, supabase)
+        res = await goal_crud_handler.create_goal(goal, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -30,7 +30,7 @@ async def create_goal(goal: goal_models.Goal, supabase: supabase_dep.SupabaseDep
 @router.get("/{goal_id}")
 async def get_goal(goal_id, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
     try:
-        res = await goal_handler.get_goal(goal_id, supabase)
+        res = await goal_crud_handler.get_goal(goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -44,7 +44,7 @@ async def update_goal(
     supabase: supabase_dep.SupabaseDep,
 ) -> goal_models.GoalInDB:
     try:
-        res = await goal_handler.update_goal(goal_id, goal, supabase)
+        res = await goal_crud_handler.update_goal(goal_id, goal, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -54,7 +54,7 @@ async def update_goal(
 @router.delete("/{goal_id}")
 async def delete_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
     try:
-        res = await goal_handler.delete_goal(goal_id, supabase)
+        res = await goal_crud_handler.delete_goal(goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -69,7 +69,7 @@ async def delete_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_
 @router.patch("/{goal_id}/activate")
 async def activate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
     try:
-        res = await goal_handler.activate_goal(goal_id, supabase)
+        res = await goal_crud_handler.activate_goal(goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -79,7 +79,7 @@ async def activate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goa
 @router.patch("/{goal_id}/deactivate")
 async def deactivate_goal(goal_id: str, supabase: supabase_dep.SupabaseDep) -> goal_models.GoalInDB:
     try:
-        res = await goal_handler.deactivate_goal(goal_id, supabase)
+        res = await goal_crud_handler.deactivate_goal(goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)

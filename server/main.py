@@ -6,7 +6,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 sys.path.append(str(pathlib.Path(__file__).parent))
-from routers import goal, week, weekly_goal
+from routers import goal_crud, week_crud, weekly_goal_crud
 
 origins = []
 
@@ -28,19 +28,19 @@ app.add_middleware(
 )
 
 app.include_router(
-    goal.router,
+    goal_crud.router,
     prefix="/goal",
     tags=["Goal"],
 )
 
 app.include_router(
-    week.router,
+    week_crud.router,
     prefix="/week",
     tags=["Week"],
 )
 
 app.include_router(
-    weekly_goal.router,
+    weekly_goal_crud.router,
     prefix="/weekly_goal",
     tags=["Weekly Goal"],
 )

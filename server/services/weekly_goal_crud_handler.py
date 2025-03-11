@@ -58,16 +58,8 @@ async def get_weekly_goals(week_id: str, supabase: AClient) -> list[weekly_goal_
     return weekly_goals
 
 
-async def can_check_weekly_goal(weekly_goal_id: str, supabase: AClient) -> bool:
-    weekly_goal = await get_weekly_goal(weekly_goal_id, supabase)
-    if weekly_goal.last_check < datetime.datetime.now().replace(hour=5, minute=0, second=0, microsecond=0):
-        return False
-    return True
-
-
 async def check_weekly_goal(weekly_goal_id: str, supabase: AClient) -> weekly_goal_models.WeeklyGoalInDB:
     weekly_goal = await get_weekly_goal(weekly_goal_id, supabase)
-    goal = await goal_handler.get_goal(weekly_goal.goal_id, supabase)
 
     weekly_goal.progress += 1
     weekly_goal.last_check = datetime.datetime.now()

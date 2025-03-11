@@ -7,7 +7,7 @@ sys.path.append(str(pathlib.Path(__file__).parent.parent))
 from config import root_logger
 from dependencies import supabase_dep
 from models import weekly_goal_models
-from services import weekly_goal_handler
+from services import weekly_goal_crud_handler
 
 
 router = APIRouter()
@@ -22,7 +22,7 @@ async def create_weekly_goal(
     weekly_goal: weekly_goal_models.WeeklyGoal, supabase: supabase_dep.SupabaseDep
 ) -> weekly_goal_models.WeeklyGoalInDB:
     try:
-        res = await weekly_goal_handler.create_weekly_goal(weekly_goal, supabase)
+        res = await weekly_goal_crud_handler.create_weekly_goal(weekly_goal, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -32,7 +32,7 @@ async def create_weekly_goal(
 @router.get("/{weekly_goal_id}")
 async def get_weekly_goal(weekly_goal_id, supabase: supabase_dep.SupabaseDep) -> weekly_goal_models.WeeklyGoalInDB:
     try:
-        res = await weekly_goal_handler.get_weekly_goal(weekly_goal_id, supabase)
+        res = await weekly_goal_crud_handler.get_weekly_goal(weekly_goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -46,7 +46,7 @@ async def update_weekly_goal(
     supabase: supabase_dep.SupabaseDep,
 ) -> weekly_goal_models.WeeklyGoalInDB:
     try:
-        res = await weekly_goal_handler.update_weekly_goal(weekly_goal_id, weekly_goal, supabase)
+        res = await weekly_goal_crud_handler.update_weekly_goal(weekly_goal_id, weekly_goal, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -58,7 +58,7 @@ async def delete_weekly_goal(
     weekly_goal_id: str, supabase: supabase_dep.SupabaseDep
 ) -> weekly_goal_models.WeeklyGoalInDB:
     try:
-        res = await weekly_goal_handler.delete_weekly_goal(weekly_goal_id, supabase)
+        res = await weekly_goal_crud_handler.delete_weekly_goal(weekly_goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -75,7 +75,7 @@ async def get_weekly_goals(
     week_id: str, supabase: supabase_dep.SupabaseDep
 ) -> list[weekly_goal_models.WeeklyGoalInDB]:
     try:
-        res = await weekly_goal_handler.get_weekly_goals(week_id, supabase)
+        res = await weekly_goal_crud_handler.get_weekly_goals(week_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -85,7 +85,7 @@ async def get_weekly_goals(
 @router.get("/{weekly_goal_id}/can_check")
 async def can_check_weekly_goal(weekly_goal_id: str, supabase: supabase_dep.SupabaseDep) -> bool:
     try:
-        res = await weekly_goal_handler.can_check_weekly_goal(weekly_goal_id, supabase)
+        res = await weekly_goal_crud_handler.can_check_weekly_goal(weekly_goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -97,7 +97,7 @@ async def check_weekly_goal(
     weekly_goal_id: str, supabase: supabase_dep.SupabaseDep
 ) -> weekly_goal_models.WeeklyGoalInDB:
     try:
-        res = await weekly_goal_handler.check_weekly_goal(weekly_goal_id, supabase)
+        res = await weekly_goal_crud_handler.check_weekly_goal(weekly_goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
@@ -109,7 +109,7 @@ async def uncheck_weekly_goal(
     weekly_goal_id: str, supabase: supabase_dep.SupabaseDep
 ) -> weekly_goal_models.WeeklyGoalInDB:
     try:
-        res = await weekly_goal_handler.uncheck_weekly_goal(weekly_goal_id, supabase)
+        res = await weekly_goal_crud_handler.uncheck_weekly_goal(weekly_goal_id, supabase)
         return res
     except Exception as e:
         root_logger.error(e)
