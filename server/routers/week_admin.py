@@ -13,25 +13,26 @@ from responses import week_admin_responses
 
 router = APIRouter()
 
+
 # ==========================================
 # Business logic for weeks
 # ==========================================
-
-
-@router.get("/latest_week")
-async def get_latest_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
-    try:
-        res = await week_admin_handler.get_latest_week(supabase)
-        return res
-    except Exception as e:
-        root_logger.error(e)
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/new_week")
 async def create_new_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
     try:
         res = await week_admin_handler.create_new_week(supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/latest_week")
+async def get_latest_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
+    try:
+        res = await week_admin_handler.get_latest_week(supabase)
         return res
     except Exception as e:
         root_logger.error(e)

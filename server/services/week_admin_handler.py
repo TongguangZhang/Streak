@@ -1,5 +1,6 @@
 import sys
 import pathlib
+import datetime
 
 from fastapi.encoders import jsonable_encoder
 from supabase import AClient, PostgrestAPIResponse
@@ -13,17 +14,6 @@ from services import week_crud_handler
 # ==========================================
 # Business logic for weeks
 # ==========================================
-
-
-async def get_latest_week(supabase: AClient) -> week_models.WeekInDB:
-    res: PostgrestAPIResponse = (
-        await supabase.table("week").select("*").order("start_date", desc=True).limit(1).execute()
-    )
-    if not res.data:
-        raise Exception("No weeks found")
-
-    week = week_models.WeekInDB(**res.data[0])
-    return week
 
 
 async def create_new_week(supabase: AClient) -> week_models.WeekInDB:
@@ -42,6 +32,22 @@ async def create_new_week(supabase: AClient) -> week_models.WeekInDB:
     _ = await supabase.table("weekly_goal").insert(jsonable_encoder(weekly_goals)).execute()
 
     return week_in_db
+
+
+async def get_latest_week(supabase: AClient) -> week_models.WeekInDB:
+    res: PostgrestAPIResponse = (
+        await supabase.table("week").select("*").order("start_date", desc=True).limit(1).execute()
+    )
+    if not res.data:
+        raise Exception("No weeks found")
+
+    week = week_models.WeekInDB(**res.data[0])
+
+    today = datetime.date.today()
+    if today.weekday() == 0 and today != week.start_date:
+        week = await create_new_week(supabase)
+
+    return week
 
 
 async def get_weekly_goals(week_id: str, supabase: AClient) -> list[weekly_goal_models.WeeklyGoalInDB]:
