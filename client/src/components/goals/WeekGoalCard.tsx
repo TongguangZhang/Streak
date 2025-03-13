@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar"
+import "react-circular-progressbar/dist/styles.css"
 import { CombinedGoal } from "@/types/week_admin_responses"
 import api from "@/api"
-import { Trophy } from "lucide-react"
 
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 const WeekGoalCard = (combinedGoal: CombinedGoal) => {
     const checkData = days.map((day) => !!combinedGoal[day.toLowerCase() as keyof CombinedGoal])
@@ -34,29 +35,24 @@ const WeekGoalCard = (combinedGoal: CombinedGoal) => {
     }
 
     const completedCount = checked.reduce((sum, val) => sum + (val ? 1 : 0), 0)
-    const isCompleted = completedCount >= combinedGoal.count
+    const progressPercentage = (completedCount / combinedGoal.count) * 100
 
     return (
         <motion.div
-            className={`p-6 rounded-2xl shadow-lg max-w-lg mx-auto mb-6 transition-all transform duration-300 relative overflow-hidden 
-                ${isCompleted ? "bg-green-500 text-white" : "bg-gray-50 text-gray-900"}`}
-            whileHover={{ scale: 1.05 }}
+            className="p-6 rounded-2xl shadow-lg w-full max-w-screen-lg mx-auto mb-6 transition-all transform duration-300 relative overflow-hidden flex items-center justify-between bg-gray-50 text-gray-900"
+            whileHover={{ scale: 1.02 }}
         >
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold">{combinedGoal.name}</h2>
-                <span className="flex items-center gap-2 bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-semibold">
-                    {isCompleted && <Trophy size={14} />} {completedCount} / {combinedGoal.count}{" "}
-                    Completed
-                </span>
+            <div className="w-1/4 flex justify-start pl-6">
+                <h2 className="text-xl font-semibold">{combinedGoal.name}</h2>
             </div>
 
-            <div className="flex flex-col items-center">
-                <div className="grid grid-cols-7 gap-3 mb-3 text-sm font-medium text-gray-500">
+            <div className="w-2/4 flex flex-col items-center">
+                <div className="grid grid-cols-7 gap-3 mb-3 text-sm font-semibold text-gray-600">
                     {days.map((day, index) => (
                         <span
                             key={index}
-                            className={`text-center w-10 p-1 rounded-md ${
-                                index === adjustedTodayIndex ? "bg-blue-500 text-white" : ""
+                            className={`text-center w-10 p-1 rounded-lg ${
+                                index === adjustedTodayIndex ? "bg-blue-600 text-white" : ""
                             }`}
                         >
                             {day}
@@ -68,10 +64,10 @@ const WeekGoalCard = (combinedGoal: CombinedGoal) => {
                         <motion.button
                             key={index}
                             onClick={() => handleCheck(index)}
-                            className={`h-10 w-10 flex items-center justify-center rounded-lg transition-all border 
+                            className={`h-12 w-12 flex items-center justify-center rounded-xl transition-all border 
                                 ${
                                     checked[index]
-                                        ? "bg-green-500 text-white border-green-600"
+                                        ? "bg-green-500 text-white border-green-600 shadow-md"
                                         : "bg-gray-200 border-gray-300"
                                 }`}
                             whileTap={{ scale: 0.9 }}
@@ -79,6 +75,23 @@ const WeekGoalCard = (combinedGoal: CombinedGoal) => {
                             {checked[index] && "✔"}
                         </motion.button>
                     ))}
+                </div>
+            </div>
+
+            <div className="w-1/4 flex justify-end pr-6">
+                <div className="w-16 h-16">
+                    <CircularProgressbar
+                        value={progressPercentage}
+                        text={`${completedCount}/${combinedGoal.count}`}
+                        styles={buildStyles({
+                            textSize: "14px",
+                            pathColor:
+                                completedCount === combinedGoal.count ? "#22C55E" : "#2563EB",
+                            textColor: "#2563EB",
+                            trailColor: "#E5E7EB",
+                            strokeLinecap: "round",
+                        })}
+                    />
                 </div>
             </div>
         </motion.div>
