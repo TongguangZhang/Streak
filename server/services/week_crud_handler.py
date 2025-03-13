@@ -5,7 +5,7 @@ from fastapi.encoders import jsonable_encoder
 from supabase import AClient, PostgrestAPIResponse
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
-from models import week_models, weekly_goal_models, goal_models
+from models import week_models
 
 # ==========================================
 # CRUD Handlers for week

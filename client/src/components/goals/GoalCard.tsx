@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { CheckCircle, Trophy } from "lucide-react"
-import { CombinedGoal } from "@/types/checklist_response"
+import { CombinedGoal } from "@/types/week_admin_responses"
 import api from "@/api"
 
 type GoalCardProps = CombinedGoal
@@ -19,7 +19,7 @@ const GoalCard = (combinedGoal: GoalCardProps) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await api.get(`checklist/${combinedGoal.id}/last_check`)
+                const res = await api.get(`check/${combinedGoal.id}/last_check`)
                 setCheckedToday(res.data != null ? res.data.split("T")[0] === today : false)
             } catch (error) {
                 console.error("Error fetching last check:", error)
@@ -33,11 +33,11 @@ const GoalCard = (combinedGoal: GoalCardProps) => {
         if (newChecked[index]) {
             if (index === checked.lastIndexOf(true)) {
                 newChecked[index] = false
-                const res = await api.patch(`checklist/${combinedGoal.id}/uncheck`)
+                const res = await api.patch(`check/${combinedGoal.id}/uncheck`)
             }
         } else if (index === 0 || newChecked[index - 1]) {
             newChecked[index] = true
-            const res = await api.patch(`checklist/${combinedGoal.id}/check`)
+            const res = await api.patch(`check/${combinedGoal.id}/check`)
         }
         setChecked(newChecked)
     }
