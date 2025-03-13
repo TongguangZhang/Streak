@@ -1,3 +1,5 @@
+// Temporarily deprecated
+
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { CheckCircle, Trophy } from "lucide-react"

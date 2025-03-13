@@ -25,8 +25,8 @@ const GoalList = () => {
             <ul>
                 {goalAndProgress.map((goal: any) => (
                     <li key={goal.id}>
-                        <GoalCard {...goal} />
-                        {/* <WeekGoalCard {...goal} /> */}
+                        {/* <GoalCard {...goal} /> */}
+                        <WeekGoalCard {...goal} />
                     </li>
                 ))}
             </ul>

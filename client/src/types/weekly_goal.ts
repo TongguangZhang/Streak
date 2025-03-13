@@ -3,6 +3,13 @@ export type WeeklyGoal = {
     week_id: string
     progress: number
     check_history: string[]
+    mon: boolean
+    tue: boolean
+    wed: boolean
+    thu: boolean
+    fri: boolean
+    sat: boolean
+    sun: boolean
 }
 
 export type WeeklyGoalInDB = WeeklyGoal & {

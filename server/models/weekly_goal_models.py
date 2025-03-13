@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 class WeeklyGoal(BaseModel):
     goal_id: uuid.UUID = Field()
     week_id: uuid.UUID = Field()
-    progress: int = Field(default=0)  # Temp deprecated
+    progress: int = Field(default=0)
     check_history: list[datetime.datetime] = Field(default=[])  # Temp deprecated
     mon: bool = Field(default=False)
     tue: bool = Field(default=False)
