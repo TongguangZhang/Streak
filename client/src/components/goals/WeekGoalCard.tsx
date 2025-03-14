@@ -49,31 +49,27 @@ const WeekGoalCard = (combinedGoal: CombinedGoal) => {
             <div className="w-2/4 flex flex-col items-center">
                 <div className="grid grid-cols-7 gap-3 mb-3 text-sm font-semibold text-gray-600">
                     {days.map((day, index) => (
-                        <span
-                            key={index}
-                            className={`text-center w-10 p-1 rounded-lg ${
-                                index === adjustedTodayIndex ? "bg-blue-600 text-white" : ""
-                            }`}
-                        >
-                            {day}
-                        </span>
-                    ))}
-                </div>
-                <div className="grid grid-cols-7 gap-3">
-                    {Array.from({ length: 7 }).map((_, index) => (
-                        <motion.button
-                            key={index}
-                            onClick={() => handleCheck(index)}
-                            className={`h-12 w-12 flex items-center justify-center rounded-xl transition-all border 
-                                ${
-                                    checked[index]
-                                        ? "bg-green-500 text-white border-green-600 shadow-md"
-                                        : "bg-gray-200 border-gray-300"
+                        <div key={index} className="flex flex-col items-center space-y-2">
+                            <span
+                                className={`text-center w-10 p-1 rounded-lg ${
+                                    index === adjustedTodayIndex ? "bg-blue-600 text-white" : ""
                                 }`}
-                            whileTap={{ scale: 0.9 }}
-                        >
-                            {checked[index] && "✔"}
-                        </motion.button>
+                            >
+                                {day}
+                            </span>
+                            <motion.button
+                                onClick={() => handleCheck(index)}
+                                className={`h-12 w-12 flex items-center justify-center rounded-xl transition-all border 
+                                    ${
+                                        checked[index]
+                                            ? "bg-green-500 text-white border-green-600 shadow-md"
+                                            : "bg-gray-200 border-gray-300"
+                                    }`}
+                                whileTap={{ scale: 0.9 }}
+                            >
+                                {checked[index] && "✔"}
+                            </motion.button>
+                        </div>
                     ))}
                 </div>
             </div>
