@@ -6,7 +6,7 @@ import GoalList from "@/components/goals/GoalList"
 const GoalPage = () => {
     return (
         <div>
-            <GoalList />
+            <GoalList week_id={null} />
             <GoalForm />
         </div>
     )

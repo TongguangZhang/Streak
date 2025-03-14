@@ -2,7 +2,7 @@ import api from "@/api"
 import { useEffect, useState } from "react"
 import WeekCard from "./WeekCard"
 
-const GoalList = () => {
+const WeekList = () => {
     const [weeks, setWeeks] = useState<any[]>([])
 
     useEffect(() => {
@@ -31,5 +31,5 @@ const GoalList = () => {
     )
 }
 
-export default GoalList
+export default WeekList
 
