@@ -1,5 +1,4 @@
 import api from "@/api"
-import GoalCard from "./GoalCard"
 import { useEffect, useState } from "react"
 import WeekGoalCard from "./WeekGoalCard"
 
@@ -25,7 +24,6 @@ const GoalList = () => {
             <ul>
                 {goalAndProgress.map((goal: any) => (
                     <li key={goal.id}>
-                        {/* <GoalCard {...goal} /> */}
                         <WeekGoalCard {...goal} />
                     </li>
                 ))}
