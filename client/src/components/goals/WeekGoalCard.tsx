@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
 import { CombinedGoal } from "@/types/week_admin_responses"
 import api from "@/api"
+import ProgressCircle from "../generic/ProgressCircle"
 
 const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
@@ -35,7 +35,6 @@ const WeekGoalCard = (combinedGoal: CombinedGoal) => {
     }
 
     const completedCount = checked.reduce((sum, val) => sum + (val ? 1 : 0), 0)
-    const progressPercentage = (completedCount / combinedGoal.count) * 100
 
     return (
         <motion.div
@@ -74,22 +73,7 @@ const WeekGoalCard = (combinedGoal: CombinedGoal) => {
                 </div>
             </div>
 
-            <div className="w-1/4 flex justify-end pr-6">
-                <div className="w-16 h-16">
-                    <CircularProgressbar
-                        value={progressPercentage}
-                        text={`${completedCount}/${combinedGoal.count}`}
-                        styles={buildStyles({
-                            textSize: "14px",
-                            pathColor:
-                                completedCount === combinedGoal.count ? "#22C55E" : "#2563EB",
-                            textColor: "#2563EB",
-                            trailColor: "#E5E7EB",
-                            strokeLinecap: "round",
-                        })}
-                    />
-                </div>
-            </div>
+            <ProgressCircle progress={completedCount} total={combinedGoal.count} />
         </motion.div>
     )
 }
