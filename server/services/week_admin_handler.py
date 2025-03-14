@@ -16,6 +16,22 @@ from services import week_crud_handler
 # ==========================================
 
 
+async def get_weeks(supabase: AClient) -> list[week_admin_responses.WeekData]:
+    res = await supabase.table("week").select("*").execute()
+    weeks = {week["id"]: week_admin_responses.WeekData(**week) for week in res.data}
+    weekly_goals = await supabase.table("weekly_goal").select("*").execute()
+    weekly_goals = [weekly_goal_models.WeeklyGoalInDB(**goal) for goal in weekly_goals.data]
+    goals = await supabase.table("goal").select("*").execute()
+    goals = {goal["id"]: goal_models.GoalInDB(**goal) for goal in goals.data}
+    for weekly_goal in weekly_goals:
+        week_id = str(weekly_goal.week_id)
+        goal_id = str(weekly_goal.goal_id)
+        weeks[week_id].total_set += goals[goal_id].count
+        weeks[week_id].total_achieved += weekly_goal.progress
+
+    return list(weeks.values())
+
+
 async def create_new_week(supabase: AClient) -> week_models.WeekInDB:
     week = week_models.Week()
     week_in_db = await week_crud_handler.create_week(week, supabase)

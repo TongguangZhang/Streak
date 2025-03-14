@@ -19,6 +19,16 @@ router = APIRouter()
 # ==========================================
 
 
+@router.get("/")
+async def get_weeks(supabase: supabase_dep.SupabaseDep) -> list[week_admin_responses.WeekData]:
+    try:
+        res = await week_admin_handler.get_weeks(supabase)
+        return res
+    except Exception as e:
+        root_logger.error(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/new_week")
 async def create_new_week(supabase: supabase_dep.SupabaseDep) -> week_models.WeekInDB:
     try:

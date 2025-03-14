@@ -1,5 +1,5 @@
 export type Week = {
-    start_date: Date
+    start_date: Date | string
 }
 
 export type WeekInDB = Week & {
