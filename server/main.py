@@ -47,8 +47,10 @@ app.include_router(
 
 app.include_router(
     week_admin.router,
-    prefix="/checklist",
-    tags=["Checklist"],
+    prefix="/week_admin",
+    tags=[
+        "Week Admin",
+    ],
 )
 
 

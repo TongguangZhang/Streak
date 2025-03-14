@@ -8,8 +8,8 @@ const GoalList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const week = await api.get("checklist/latest_week")
-                const weeklyGoals = await api.get(`checklist/${week.data.id}`)
+                const week = await api.get("week_admin/latest_week")
+                const weeklyGoals = await api.get(`week_admin/${week.data.id}`)
                 setGoalAndProgress(weeklyGoals.data)
             } catch (error) {
                 console.error("Error fetching goals:", error)
