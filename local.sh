@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker build -t server server/
+docker build -t server .
 docker run \
     -e APP_ENV=development \
     -p 8085:8085 \
