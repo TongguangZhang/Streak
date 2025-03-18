@@ -1,22 +1,14 @@
 import api from "@/api"
-import { useEffect, useState } from "react"
 import WeekCard from "./WeekCard"
 
-const WeekList = () => {
-    const [weeks, setWeeks] = useState<any[]>([])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const weeks = await api.get("week_admin")
-                setWeeks(weeks.data)
-            } catch (error) {
-                console.error("Error fetching goals:", error)
-            }
-        }
-
-        fetchData()
-    }, [])
+const WeekList = async () => {
+    let weeks: any[] = []
+    try {
+        const res = await api.get("week_admin")
+        weeks = res.data
+    } catch (error) {
+        console.error("Error fetching goals:", error)
+    }
 
     return (
         <div>

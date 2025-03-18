@@ -1,3 +1,5 @@
+"use client"
+
 import { WeekData } from "@/types/week_admin_responses"
 import { motion } from "framer-motion"
 import ProgressCircle from "../generic/ProgressCircle"

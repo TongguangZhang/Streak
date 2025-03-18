@@ -1,5 +1,3 @@
-"use client"
-
 import WeekList from "@/components/weeks/WeekList"
 
 const WeeksPage = () => {

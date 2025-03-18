@@ -1,11 +1,11 @@
-"use client"
-
 import GoalList from "@/components/goals/GoalList"
-import { useParams } from "next/navigation"
 
-const WeekPage = () => {
-    const params = useParams()
-    const week_id = params?.week_id as string // Ensure correct type
+type WeekPageParams = {
+    week_id: string
+}
+
+const WeekPage = async ({ params }: { params: WeekPageParams }) => {
+    const week_id = (await params?.week_id) as string
 
     return (
         <div>

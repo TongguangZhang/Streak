@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react"
 import api from "@/api"
 
@@ -30,7 +32,7 @@ const GoalForm = () => {
                 count: parseInt(formData.count),
             })
             const week = await api.get("week_admin/latest_week")
-            const weekly_goal_response = await api.post("weekly_goal_crud", {
+            await api.post("weekly_goal_crud", {
                 week_id: week.data.id,
                 goal_id: create_goal_response.data.id,
             })
