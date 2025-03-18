@@ -11,7 +11,7 @@ const WeekList = async () => {
     }
 
     return (
-        <div>
+        <div className="mt-20 space-y-4">
             <ul>
                 {weeks.map((week: any) => (
                     <li key={week.id}>
