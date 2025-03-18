@@ -21,7 +21,7 @@ const GoalList = async ({ week_id }: GoalListProps) => {
     }
 
     return (
-        <div>
+        <div className="mt-20 space-y-4">
             <ul>
                 {weeklyGoals.map((goal: any) => (
                     <li key={goal.id}>
